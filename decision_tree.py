@@ -48,7 +48,7 @@ def gain_best(dataset):
 
 def tree(dataset):
     counter = Counter([data.category for data in dataset])
-    if len(counter) == 1:
+    if len(counter) == 1 or len(dataset[0]) == 1:
         return counter.most_common()[0][0]
     best_label = gain_best(dataset)
     decision_tree = {best_label: {}}
