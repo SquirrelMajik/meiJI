@@ -4,21 +4,26 @@ import re
 
 
 def split_words(string):
-    pattern = re.compile(r"(?!:[a-zA-Z]+)|([0-9]+(\.[0-9]+)?)")
+    pattern = re.compile(r"\w+")
     return re.findall(pattern, string)
     
 
+def words_set(string_list):
+    return set([split_words(string) for string in string_list])
+
+                                                                                                                                                   
+    
 
 if __name__ == "__main__":
-    # labels = ['string']
-    # dataset = [
-    #     [1, 100, 3, 'good'],
-    #     [2, 50, 2, 'good'],
-    #     [4, 120, 3, 'good'],
-    #     [4, 50, 3, 'bad'],
-    #     [2, 30, 2, 'bad']
-    # ]
-    # dataset = DataSet(dataset, labels)
-    # d_tree = tree(dataset)
-    print split_words("qwe 234 asg qwer 234 sadf 324gfas fawe3 wefetqwt")
+    labels = ['sentence']
+    dataset = [
+        ["I am a good man.", 'good'],
+        ["You are such a bitch!", 'bad'],
+        ["What the fuck!", 'bad'],
+        ["I will go skating.", 'good'],
+        ["Fuck you, bitch!", 'bad']
+    ]
+    dataset = DataSet(dataset, labels)
+    print words_set(dataset)
+    
     
