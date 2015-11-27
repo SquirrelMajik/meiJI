@@ -56,15 +56,15 @@ class table:
         
 
 class LabelTypeError(Exception):
-     def __init__(self):
-         message = "Label must be a list"
-         super(LabelTypeError, self).__init__(message)
+    def __init__(self):
+        message = "Label must be a list"
+        super(LabelTypeError, self).__init__(message)
          
 
 class DataTypeError(Exception):
-     def __init__(self):
-         message = "Data must be a list"
-         super(DataTypeError, self).__init__(message)
+    def __init__(self):
+        message = "Data must be a list"
+        super(DataTypeError, self).__init__(message)
          
          
 class DataValueError(Exception):
