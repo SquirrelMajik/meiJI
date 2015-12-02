@@ -1,3 +1,6 @@
+# coding=utf-8
+from __future__ import absolute_import
+
 from utils import table_format
 
 class table:
@@ -9,8 +12,12 @@ class table:
         return len(self.data)
         
     def __getitem__(self, tup):
-        num, label = tup
-        return self.data[num] if label is None else self.get(num, label)
+        if isinstance(tup, tuple):
+            num, label = tup
+            return self.get(num, label)
+        else:
+            num = tup
+            return self.data[num]
 
     # def __setitem__(self, key, value):
     #     self.data[key] = value
@@ -24,7 +31,10 @@ class table:
     @staticmethod
     def _shake_labels_(labels):
         if not isinstance(labels, list):
-            raise LabelTypeError()
+            raise LabelsTypeError()
+        for label in labels:
+            if not isinstance(label, str):
+                raise LabelTypeError()
         return labels
     
     @staticmethod
@@ -50,21 +60,33 @@ class table:
         self.data.extends(data)
         return self
         
-    def get(self, num, label):
-        label_num = self.labels.index(label)
-        return self.data[num][label_num]
+    def get(self, data, label):
+        if not isinstance(label, int):
+            label = self.labels.index(label)
+        if isinstance(data, list) and not label:
+            return data
+        return self.data[data][label]
         
+    def slice(*labels, **except):
+        pass
+        
+
+class LabelsTypeError(Exception):
+    def __init__(self):
+        message = "Labels must be a list"
+        super().__init__(message)
+         
 
 class LabelTypeError(Exception):
     def __init__(self):
-        message = "Label must be a list"
-        super(LabelTypeError, self).__init__(message)
-         
+        message = "Label must be a string"
+        super().__init__(message)
+        
 
 class DataTypeError(Exception):
     def __init__(self):
         message = "Data must be a list"
-        super(DataTypeError, self).__init__(message)
+        super().__init__(message)
          
          
 class DataValueError(Exception):
@@ -72,7 +94,7 @@ class DataValueError(Exception):
         message = "Data is incorrect"
         if num is not None:
             message += " at {}".format(num)
-        super(DataValueError, self).__init__(message)
+        super().__init__(message)
 
         
 if __name__ == "__main__":
@@ -83,4 +105,4 @@ if __name__ == "__main__":
         [3,4,5],
     ]
     t = table(labels, *data)
-    print t
+    print(t[1])
