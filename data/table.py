@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import absolute_import
 
+import json
 from utils import table_format
 
 class table:
@@ -62,13 +63,32 @@ class table:
         
     def get(self, data, label):
         if not isinstance(label, int):
+            if label not in self.labels:
+                raise LabelNotFoundError(label)
             label = self.labels.index(label)
-        if isinstance(data, list) and not label:
-            return data
+        if isinstance(data, list) and label:
+            if data not in self.data:
+                raise DataNotFoundError(data)
+            return data[label]
         return self.data[data][label]
         
-    def slice(*labels, **except):
+    def shake(self, **arg):
+        labels = self.labels
+        dataset = []
+        for data in self.data:
+            for term in arg:
+                if term not in self.labels:
+                    raise LabelNotFoundError(term)
+                if self[data, term] != arg[term]:
+                    break
+            else:
+                dataset.append(data)
+        return tabel(labels, *dataset)
+        
+    def slice(self, *labels, **except):
         pass
+        
+
         
 
 class LabelsTypeError(Exception):
@@ -83,6 +103,12 @@ class LabelTypeError(Exception):
         super().__init__(message)
         
 
+class LabelNotFoundError(Exception):
+    def __init__(self, label):
+        message = "There is no label: {}".format(label)
+        super().__init__(message)
+        
+
 class DataTypeError(Exception):
     def __init__(self):
         message = "Data must be a list"
@@ -94,6 +120,12 @@ class DataValueError(Exception):
         message = "Data is incorrect"
         if num is not None:
             message += " at {}".format(num)
+        super().__init__(message)
+     
+        
+class DataNotFoundError(Exception):
+    def __init__(self, data):
+        message = "There is no data: {}".format(json.dumps(data))
         super().__init__(message)
 
         
